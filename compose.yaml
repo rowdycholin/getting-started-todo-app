@@ -170,11 +170,10 @@ services:
       PMA_HOST: mysql
       PMA_USER: root
       PMA_PASSWORD: secret
+      PMA_ABSOLUTE_URI: /db/
     labels:
       traefik.http.routers.phpmyadmin.rule: PathPrefix(`/db`)
       traefik.http.routers.phpmyadmin.priority: 3
-      traefik.http.routers.phpmyadmin.middlewares: phpmyadmin-strip-db
-      traefik.http.middlewares.phpmyadmin-strip-db.stripprefix.prefixes: /db
       traefik.http.services.phpmyadmin.loadbalancer.server.port: 80
 
 ###################################################
