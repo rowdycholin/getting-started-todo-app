@@ -173,8 +173,8 @@ services:
     labels:
       traefik.http.routers.phpmyadmin.rule: PathPrefix(`/db`)
       traefik.http.routers.phpmyadmin.priority: 3
-      traefik.http.routers.phpmyadmin.middlewares: phpmyadmin-strip-db
-      traefik.http.middlewares.phpmyadmin-strip-db.stripprefix.prefixes: /db
+      traefik.http.routers.phpmyadmin.middlewares: phpmyadmin-replace-path
+      traefik.http.middlewares.phpmyadmin-replace-path.replacepath.path: /
       traefik.http.services.phpmyadmin.loadbalancer.server.port: 80
 
 ###################################################
