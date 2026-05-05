@@ -145,7 +145,7 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
     healthcheck:
-      test: ["CMD-SHELL", "exit 0"]
+      test: ["CMD", "true"]
       interval: 5s
       timeout: 5s
       retries: 3
