@@ -145,10 +145,11 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-psecret", "-h", "127.0.0.1", "--silent"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
 
   ###################################################
   # Service: phpmyadmin
