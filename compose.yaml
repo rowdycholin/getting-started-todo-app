@@ -170,6 +170,7 @@ services:
       PMA_HOST: mysql
       PMA_USER: root
       PMA_PASSWORD: secret
+      PMA_ABSOLUTE_URI: https://docker-test-bqywj.sprites.app/db/
     labels:
       traefik.http.routers.phpmyadmin.rule: PathPrefix(`/db`)
       traefik.http.routers.phpmyadmin.priority: 3
