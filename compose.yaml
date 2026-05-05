@@ -88,6 +88,7 @@ services:
           action: rebuild
     labels:
       traefik.http.routers.backend.rule: PathPrefix(`/api`)
+      traefik.http.routers.backend.priority: 2
       traefik.http.services.backend.loadbalancer.server.port: 3000
 
   ###################################################
@@ -118,6 +119,7 @@ services:
           action: rebuild
     labels:
       traefik.http.routers.client.rule: PathPrefix(`/`)
+      traefik.http.routers.client.priority: 1
       traefik.http.services.client.loadbalancer.server.port: 5173
 
 
@@ -170,6 +172,7 @@ services:
       PMA_PASSWORD: secret
     labels:
       traefik.http.routers.phpmyadmin.rule: PathPrefix(`/db`)
+      traefik.http.routers.phpmyadmin.priority: 3
       traefik.http.routers.phpmyadmin.middlewares: phpmyadmin-strip-db
       traefik.http.middlewares.phpmyadmin-strip-db.stripprefix.prefixes: /db
       traefik.http.services.phpmyadmin.loadbalancer.server.port: 80
