@@ -64,8 +64,8 @@ services:
   # dev, these values are fine.
   #
   # Finally, the labels are used to configure Traefik (the reverse proxy) with
-  # the appropriate routing rules. In this case, all requests to
-  # localhost:8080/api/* will be forwarded to this service's port 3000.
+  # path-based routing rules. In this case, all requests to /api/* are
+  # forwarded to this service's port 3000.
   ###################################################
   backend:
     build:
@@ -87,7 +87,7 @@ services:
         - path: ./backend/package.json
           action: rebuild
     labels:
-      traefik.http.routers.backend.rule: Host(`localhost`) && PathPrefix(`/api`)
+      traefik.http.routers.backend.rule: PathPrefix(`/api`)
       traefik.http.services.backend.loadbalancer.server.port: 3000
 
   ###################################################
@@ -101,9 +101,9 @@ services:
   # the host machine to the container. This allows the client to be automatically
   # reloaded when code changes are made.
   # 
-  # The labels are used to configure Traefik (the reverse proxy) with the 
-  # appropriate routing rules. In this case, all requests to localhost:8080
-  # will be forwarded to this service's port 5173.
+  # The labels are used to configure Traefik (the reverse proxy) with path-
+  # based routing rules. In this case, all requests that are not matched by
+  # more-specific routes are forwarded to this service's port 5173.
   ###################################################
   client:
     build:
@@ -117,7 +117,7 @@ services:
         - path: ./client/package.json
           action: rebuild
     labels:
-      traefik.http.routers.client.rule: Host(`localhost`)
+      traefik.http.routers.client.rule: PathPrefix(`/`)
       traefik.http.services.client.loadbalancer.server.port: 5173
 
 
@@ -158,9 +158,9 @@ services:
   # provide the default credentials, letting us immediately open the interface
   # without needing to log in.
   #
-  # The labels are used to configure Traefik (the reverse proxy) with the
-  # routing rules. In this case, all requests to db.localhost on port 8080
-  # will be forwarded to this service's port 80.
+  # The labels are used to configure Traefik (the reverse proxy) with path-
+  # based routing rules. In this case, all requests to /db on the same host
+  # are stripped of the /db prefix and forwarded to this service's port 80.
   ###################################################
   phpmyadmin:
     image: phpmyadmin
@@ -169,7 +169,9 @@ services:
       PMA_USER: root
       PMA_PASSWORD: secret
     labels:
-      traefik.http.routers.phpmyadmin.rule: Host(`db.localhost`)
+      traefik.http.routers.phpmyadmin.rule: PathPrefix(`/db`)
+      traefik.http.routers.phpmyadmin.middlewares: phpmyadmin-strip-db
+      traefik.http.middlewares.phpmyadmin-strip-db.stripprefix.prefixes: /db
       traefik.http.services.phpmyadmin.loadbalancer.server.port: 80
 
 ###################################################
