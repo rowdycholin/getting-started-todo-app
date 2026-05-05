@@ -38,13 +38,13 @@ You'll see several container images get downloaded from Docker Hub and, after a
 moment, the application will be up and running! No need to install or configure
 anything on your machine!
 
-Simply open to [http://localhost](http://localhost) to see the app up and running!
+Simply open to [http://localhost:8080](http://localhost:8080) to see the app up and running!
 
 Any changes made to either the backend or frontend should be seen immediately
 without needing to rebuild or restart the containers.
 
 To help with the database, the development stack also includes phpMyAdmin, which
-can be accessed at [http://db.localhost](http://db.localhost) (most browsers will 
+can be accessed at [http://db.localhost:8080](http://db.localhost:8080) (most browsers will 
 resolve `*.localhost` correctly, so no hosts file changes should be required).
 
 ### Tearing it down

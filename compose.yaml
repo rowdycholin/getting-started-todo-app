@@ -35,13 +35,15 @@ services:
   # configure it here to watch the Docker events for new containers and to use
   # their labels for configuration. That's why the Docker socket is mounted.
   #
-  # We also expose port 80 to connect to the proxy from the host machine.
+  # We also expose port 8080 on the host to connect to the proxy.
+  # Traefik still listens on port 80 in the container and forwards
+  # requests to the backend/client/phpMyAdmin services on their own ports.
   ###################################################
   proxy:
     image: traefik:v3.6
     command: --providers.docker
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -62,8 +64,8 @@ services:
   # dev, these values are fine.
   #
   # Finally, the labels are used to configure Traefik (the reverse proxy) with
-  # the appropriate routing rules. In this case, all requests to localhost/api/*
-  # will be forwarded to this service's port 3000. 
+  # the appropriate routing rules. In this case, all requests to
+  # localhost:8080/api/* will be forwarded to this service's port 3000.
   ###################################################
   backend:
     build:
@@ -100,8 +102,8 @@ services:
   # reloaded when code changes are made.
   # 
   # The labels are used to configure Traefik (the reverse proxy) with the 
-  # appropriate routing rules. In this case, all requests to localhost will be
-  # forwarded to this service's port 5173.
+  # appropriate routing rules. In this case, all requests to localhost:8080
+  # will be forwarded to this service's port 5173.
   ###################################################
   client:
     build:
@@ -143,7 +145,7 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$${MYSQL_ROOT_PASSWORD} --silent"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -160,8 +162,8 @@ services:
   # without needing to log in.
   #
   # The labels are used to configure Traefik (the reverse proxy) with the
-  # routing rules. In this case, all requests to db.localhost will be forwarded
-  # to this service's port 80.
+  # routing rules. In this case, all requests to db.localhost on port 8080
+  # will be forwarded to this service's port 80.
   ###################################################
   phpmyadmin:
     image: phpmyadmin
